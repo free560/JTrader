@@ -1,0 +1,185 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Ajouter un trade — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6">
+        <form id="add-trade-form" novalidate class="max-w-3xl mx-auto space-y-6 jt-enter">
+
+          <!-- Section : Instrument & Direction -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="candlestick-chart" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Instrument & Direction
+            </h2>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="pair" class="jt-label">Instrument</label>
+                <select id="pair" class="jt-input">
+                  <option value="">Sélectionner...</option>
+                  <optgroup label="Indices synthétiques">
+                    <option>Boom 1000</option>
+                    <option>Boom 500</option>
+                    <option>Crash 1000</option>
+                    <option>Crash 500</option>
+                    <option>Volatility 75</option>
+                    <option>Volatility 100</option>
+                  </optgroup>
+                  <optgroup label="Forex">
+                    <option>EUR/USD</option>
+                    <option>GBP/USD</option>
+                    <option>USD/JPY</option>
+                    <option>USD/CHF</option>
+                    <option>AUD/USD</option>
+                    <option>XAU/USD</option>
+                  </optgroup>
+                  <optgroup label="Crypto">
+                    <option>BTC/USD</option>
+                    <option>ETH/USD</option>
+                    <option>SOL/USD</option>
+                  </optgroup>
+                  <option value="__custom__">Autre (saisie libre)</option>
+                </select>
+                <input type="text" id="custom-pair" class="jt-input mt-2 hidden" placeholder="Nom de l'instrument" />
+              </div>
+
+              <div>
+                <label class="jt-label">Direction</label>
+                <div class="flex gap-2">
+                  <button type="button" data-direction="LONG" class="jt-direction-btn">
+                    <i data-lucide="trending-up" class="w-4 h-4"></i> LONG
+                  </button>
+                  <button type="button" data-direction="SHORT" class="jt-direction-btn">
+                    <i data-lucide="trending-down" class="w-4 h-4"></i> SHORT
+                  </button>
+                </div>
+                <input type="hidden" id="direction" name="direction" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section : Niveaux de prix -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="target" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Niveaux de prix
+            </h2>
+
+            <div class="grid sm:grid-cols-2 lg:grid-cols-4 gap-4">
+              <div>
+                <label for="entry" class="jt-label">Entrée</label>
+                <input type="number" step="any" id="entry" class="jt-input" placeholder="0.00" />
+              </div>
+              <div>
+                <label for="stopLoss" class="jt-label">Stop Loss</label>
+                <input type="number" step="any" id="stopLoss" class="jt-input" placeholder="0.00" />
+              </div>
+              <div>
+                <label for="takeProfit" class="jt-label">Take Profit</label>
+                <input type="number" step="any" id="takeProfit" class="jt-input" placeholder="0.00" />
+              </div>
+              <div>
+                <label for="lotSize" class="jt-label">Taille de position</label>
+                <input type="number" step="any" id="lotSize" class="jt-input" placeholder="0.01" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section : Résultat -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="wallet" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Résultat
+            </h2>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="profit" class="jt-label">Profit ou Perte</label>
+                <input type="number" step="any" id="profit" class="jt-input" placeholder="ex: 45.50 ou -20.00" />
+                <p class="text-xs jt-text-muted mt-1.5">Positif = gain, négatif = perte. Le résultat WIN/LOSS est déduit automatiquement.</p>
+              </div>
+              <div>
+                <label class="jt-label">Capital projeté</label>
+                <div class="jt-input flex items-center !bg-transparent">
+                  <span id="capital-preview" class="font-display text-sm jt-text-muted">—</span>
+                </div>
+              </div>
+            </div>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="date" class="jt-label">Date</label>
+                <input type="date" id="date" class="jt-input" />
+              </div>
+              <div>
+                <label for="time" class="jt-label">Heure</label>
+                <input type="time" id="time" class="jt-input" />
+              </div>
+            </div>
+          </div>
+
+          <!-- Section : Critères SMC -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="layers" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Critères Smart Money Concepts
+            </h2>
+            <div id="smc-grid" class="grid sm:grid-cols-2 lg:grid-cols-3 gap-3">
+              <!-- Injecté par addTrade.js -->
+            </div>
+          </div>
+
+          <!-- Section : Notes -->
+          <div class="jt-card p-5 space-y-3">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="notebook-pen" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Notes
+            </h2>
+            <textarea id="notes" rows="4" class="jt-input resize-none" placeholder="Contexte du trade, ressenti, leçon apprise..."></textarea>
+          </div>
+
+          <div class="flex items-center gap-3 pb-6">
+            <button type="submit" id="add-trade-submit" class="jt-btn jt-btn-primary">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Enregistrer le trade</span>
+            </button>
+            <a href="dashboard.html" class="jt-btn jt-btn-ghost">Annuler</a>
+          </div>
+
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <!-- Barre de navigation mobile (visible uniquement sous lg) -->
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/trades/addTrade.js"></script>
+</body>
+</html>

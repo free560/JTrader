@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Historique — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6 space-y-4">
+
+        <!-- Barre d'outils : recherche + filtres + CTA -->
+        <div class="jt-card p-4 flex flex-col sm:flex-row sm:items-center gap-3 jt-enter">
+          <div class="relative flex-1 min-w-0">
+            <i data-lucide="search" class="w-4 h-4 jt-text-muted absolute left-3.5 top-1/2 -translate-y-1/2"></i>
+            <input type="text" id="search-input" class="jt-input !pl-10" placeholder="Rechercher un instrument, une note..." />
+          </div>
+
+          <select id="filter-direction" class="jt-input sm:w-40">
+            <option value="all">Toute direction</option>
+            <option value="LONG">LONG</option>
+            <option value="SHORT">SHORT</option>
+          </select>
+
+          <select id="filter-result" class="jt-input sm:w-36">
+            <option value="all">Tout résultat</option>
+            <option value="WIN">WIN</option>
+            <option value="LOSS">LOSS</option>
+          </select>
+
+          <a href="add-trade.html" class="jt-btn jt-btn-primary whitespace-nowrap">
+            <i data-lucide="plus" class="w-4 h-4"></i>
+            <span class="hidden sm:inline">Ajouter un trade</span>
+          </a>
+        </div>
+
+        <!-- Tableau -->
+        <div class="jt-card p-0 overflow-hidden jt-enter">
+          <div class="flex items-center justify-between px-4 pt-4">
+            <span id="trades-result-count" class="text-xs jt-text-muted"></span>
+          </div>
+
+          <div id="trades-table-wrapper" class="overflow-x-auto hidden">
+            <table class="w-full min-w-[640px]">
+              <thead>
+                <tr class="border-b border-white/10">
+                  <th data-sort-key="createdAt" class="text-left py-3 px-4 text-xs font-semibold jt-text-muted uppercase tracking-wide cursor-pointer select-none whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1">Date <i data-sort-icon data-lucide="arrow-down" class="w-3 h-3 opacity-0"></i></span>
+                  </th>
+                  <th data-sort-key="pair" class="text-left py-3 px-4 text-xs font-semibold jt-text-muted uppercase tracking-wide cursor-pointer select-none whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1">Instrument <i data-sort-icon data-lucide="arrow-down" class="w-3 h-3 opacity-0"></i></span>
+                  </th>
+                  <th data-sort-key="direction" class="text-left py-3 px-4 text-xs font-semibold jt-text-muted uppercase tracking-wide cursor-pointer select-none whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1">Direction <i data-sort-icon data-lucide="arrow-down" class="w-3 h-3 opacity-0"></i></span>
+                  </th>
+                  <th data-sort-key="profit" class="text-left py-3 px-4 text-xs font-semibold jt-text-muted uppercase tracking-wide cursor-pointer select-none whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1">Profit <i data-sort-icon data-lucide="arrow-down" class="w-3 h-3 opacity-0"></i></span>
+                  </th>
+                  <th data-sort-key="result" class="text-left py-3 px-4 text-xs font-semibold jt-text-muted uppercase tracking-wide cursor-pointer select-none whitespace-nowrap">
+                    <span class="inline-flex items-center gap-1">Résultat <i data-sort-icon data-lucide="arrow-down" class="w-3 h-3 opacity-0"></i></span>
+                  </th>
+                  <th class="text-left py-3 px-4 text-xs font-semibold jt-text-muted uppercase tracking-wide whitespace-nowrap">Actions</th>
+                </tr>
+              </thead>
+              <tbody id="trades-table-body"></tbody>
+            </table>
+          </div>
+
+          <!-- État vide : aucun trade du tout -->
+          <div id="trades-empty-state" class="hidden text-center py-14 px-4">
+            <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="inbox" class="w-5 h-5 jt-text-muted"></i>
+            </div>
+            <p class="jt-text-muted text-sm mb-4">Aucun trade enregistré pour le moment.</p>
+            <a href="add-trade.html" class="jt-btn jt-btn-primary inline-flex text-sm">
+              <i data-lucide="plus" class="w-4 h-4"></i>
+              <span>Ajouter mon premier trade</span>
+            </a>
+          </div>
+
+          <!-- État vide : recherche/filtres sans résultat -->
+          <div id="trades-no-results" class="hidden text-center py-14 px-4">
+            <div class="w-11 h-11 rounded-xl bg-white/5 flex items-center justify-center mx-auto mb-3">
+              <i data-lucide="search-x" class="w-5 h-5 jt-text-muted"></i>
+            </div>
+            <p class="jt-text-muted text-sm">Aucun trade ne correspond à ta recherche/filtres.</p>
+          </div>
+
+          <div id="trades-pagination" class="flex items-center justify-center gap-1 py-4"></div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/trades/listTrades.js"></script>
+</body>
+</html>

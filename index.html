@@ -1,0 +1,23 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>JTrader</title>
+<script src="https://cdn.tailwindcss.com"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen flex items-center justify-center">
+  <div class="jt-spinner" style="width:2rem;height:2rem;border-width:3px;"></div>
+
+  <script type="module">
+    import { auth } from "./assets/js/config/firebase.js";
+    import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
+    import { ROUTES } from "./assets/js/utils/constants.js";
+
+    onAuthStateChanged(auth, (user) => {
+      window.location.replace(user ? ROUTES.DASHBOARD : ROUTES.LOGIN);
+    });
+  </script>
+</body>
+</html>

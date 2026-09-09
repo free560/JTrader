@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Connexion — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="min-h-screen grid lg:grid-cols-2">
+
+    <!-- Panneau de marque (masqué sur mobile) -->
+    <aside class="hidden lg:flex flex-col justify-between p-12 relative overflow-hidden border-r border-white/5">
+      <div class="relative z-10 flex items-center gap-2.5">
+        <div class="w-9 h-9 rounded-lg bg-[var(--jt-accent)]/15 border border-[var(--jt-accent)]/30 flex items-center justify-center">
+          <i data-lucide="candlestick-chart" class="w-5 h-5" style="color:var(--jt-accent)"></i>
+        </div>
+        <span class="font-display font-semibold text-lg tracking-tight">JTrader</span>
+      </div>
+
+      <div class="relative z-10 max-w-md">
+        <h1 class="font-display text-4xl leading-tight font-medium">
+          Chaque trade raconte<br />une histoire.
+        </h1>
+        <p class="jt-text-muted mt-4 text-[15px] leading-relaxed">
+          Consigne tes entrées, analyse ta discipline SMC et laisse les chiffres
+          — pas les émotions — piloter ta prochaine décision.
+        </p>
+      </div>
+
+      <!-- Courbe décorative type equity curve -->
+      <svg class="relative z-10" viewBox="0 0 400 100" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <defs>
+          <linearGradient id="loginCurveFill" x1="0" y1="0" x2="0" y2="1">
+            <stop offset="0%" stop-color="#22C55E" stop-opacity="0.35"/>
+            <stop offset="100%" stop-color="#22C55E" stop-opacity="0"/>
+          </linearGradient>
+        </defs>
+        <path d="M0 70 L40 62 L80 68 L120 45 L160 50 L200 30 L240 38 L280 18 L320 24 L360 8 L400 14 L400 100 L0 100 Z" fill="url(#loginCurveFill)"/>
+        <path d="M0 70 L40 62 L80 68 L120 45 L160 50 L200 30 L240 38 L280 18 L320 24 L360 8 L400 14" stroke="#22C55E" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round"/>
+      </svg>
+
+      <div class="absolute -bottom-24 -left-24 w-96 h-96 rounded-full bg-[var(--jt-accent)]/10 blur-3xl"></div>
+    </aside>
+
+    <!-- Panneau formulaire -->
+    <main class="flex items-center justify-center p-6 sm:p-12">
+      <div class="w-full max-w-sm jt-enter">
+
+        <div class="lg:hidden flex items-center gap-2.5 mb-10 justify-center">
+          <div class="w-9 h-9 rounded-lg bg-[var(--jt-accent)]/15 border border-[var(--jt-accent)]/30 flex items-center justify-center">
+            <i data-lucide="candlestick-chart" class="w-5 h-5" style="color:var(--jt-accent)"></i>
+          </div>
+          <span class="font-display font-semibold text-lg">JTrader</span>
+        </div>
+
+        <h2 class="font-display text-2xl font-medium mb-1">Content de te revoir</h2>
+        <p class="jt-text-muted text-sm mb-8">Connecte-toi pour retrouver ton journal.</p>
+
+        <form id="login-form" novalidate class="space-y-5">
+          <div>
+            <label for="email" class="jt-label">Email</label>
+            <input type="email" id="email" name="email" class="jt-input" placeholder="toi@exemple.com" autocomplete="email" />
+            <p id="email-error" class="jt-field-error"></p>
+          </div>
+
+          <div>
+            <div class="flex items-center justify-between mb-0.5">
+              <label for="password" class="jt-label !mb-0">Mot de passe</label>
+            </div>
+            <div class="relative">
+              <input type="password" id="password" name="password" class="jt-input pr-11" placeholder="••••••••" autocomplete="current-password" />
+              <button type="button" id="toggle-password" class="absolute right-3 top-1/2 -translate-y-1/2 jt-text-muted hover:text-white transition-colors" aria-label="Afficher le mot de passe">
+                <i id="toggle-password-icon" data-lucide="eye" class="w-[18px] h-[18px]"></i>
+              </button>
+            </div>
+            <p id="password-error" class="jt-field-error"></p>
+          </div>
+
+          <button type="submit" id="login-submit" class="jt-btn jt-btn-primary w-full">
+            <span>Se connecter</span>
+          </button>
+        </form>
+
+        <p class="text-center text-sm jt-text-muted mt-8">
+          Pas encore de compte ?
+          <a href="register.html" class="font-medium" style="color:var(--jt-accent)">Créer un compte</a>
+        </p>
+      </div>
+    </main>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/auth/login.js"></script>
+</body>
+</html>

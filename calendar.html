@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Calendrier — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6">
+        <div class="max-w-4xl mx-auto space-y-6">
+
+          <!-- Navigation mensuelle -->
+          <div class="flex items-center justify-between jt-enter">
+            <div class="flex items-center gap-1.5 sm:gap-2">
+              <button id="calendar-prev" class="jt-btn jt-btn-ghost !p-2" aria-label="Mois précédent">
+                <i data-lucide="chevron-left" class="w-4 h-4"></i>
+              </button>
+              <h2 id="calendar-month-label" class="font-display text-base sm:text-lg font-medium w-36 sm:w-44 text-center">—</h2>
+              <button id="calendar-next" class="jt-btn jt-btn-ghost !p-2" aria-label="Mois suivant">
+                <i data-lucide="chevron-right" class="w-4 h-4"></i>
+              </button>
+            </div>
+            <button id="calendar-today" class="jt-btn jt-btn-ghost text-xs sm:text-sm">Aujourd'hui</button>
+          </div>
+
+          <!-- Résumé du mois -->
+          <div class="grid grid-cols-3 gap-3 sm:gap-4 jt-enter">
+            <div class="jt-card p-4 min-w-0">
+              <span class="jt-label !mb-1">Profit du mois</span>
+              <p id="calendar-month-profit" class="font-display text-lg font-medium truncate">—</p>
+            </div>
+            <div class="jt-card p-4 min-w-0">
+              <span class="jt-label !mb-1">Jours tradés</span>
+              <p id="calendar-month-days" class="font-display text-lg font-medium truncate">—</p>
+            </div>
+            <div class="jt-card p-4 min-w-0">
+              <span class="jt-label !mb-1">Gains / Pertes</span>
+              <p id="calendar-month-winloss" class="font-display text-lg font-medium truncate">—</p>
+            </div>
+          </div>
+
+          <!-- Grille du calendrier -->
+          <div class="jt-card p-4 sm:p-5 jt-enter">
+            <div class="grid grid-cols-7 gap-1.5 sm:gap-2 mb-2">
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Lun</div>
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Mar</div>
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Mer</div>
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Jeu</div>
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Ven</div>
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Sam</div>
+              <div class="text-center text-[10px] sm:text-[11px] font-medium jt-text-muted">Dim</div>
+            </div>
+            <div id="calendar-grid" class="grid grid-cols-7 gap-1.5 sm:gap-2">
+              <!-- Injecté par calendar.js -->
+            </div>
+          </div>
+
+          <!-- Légende -->
+          <div class="flex items-center gap-5 text-xs jt-text-muted jt-enter">
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[var(--jt-success)]"></span> Jour gagnant</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full bg-[var(--jt-danger)]"></span> Jour perdant</span>
+            <span class="flex items-center gap-1.5"><span class="w-2.5 h-2.5 rounded-full border border-white/20"></span> Sans trade</span>
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <!-- Modal détail d'un jour -->
+  <div id="day-detail-modal" class="hidden fixed inset-0 z-50 flex items-end sm:items-center justify-center">
+    <div id="day-modal-backdrop" class="absolute inset-0 bg-black/60 backdrop-blur-sm"></div>
+    <div class="relative jt-card w-full sm:max-w-md max-h-[75vh] flex flex-col rounded-b-none sm:rounded-2xl">
+      <div class="flex items-center justify-between p-5 border-b border-white/5 shrink-0">
+        <h3 id="day-modal-title" class="font-display text-base font-medium capitalize truncate pr-4"></h3>
+        <button id="day-modal-close" class="jt-text-muted hover:text-white shrink-0" aria-label="Fermer">
+          <i data-lucide="x" class="w-5 h-5"></i>
+        </button>
+      </div>
+      <div id="day-modal-list" class="p-5 overflow-y-auto"></div>
+    </div>
+  </div>
+
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/calendar/calendar.js"></script>
+</body>
+</html>

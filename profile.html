@@ -1,0 +1,89 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Profil — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6">
+        <div class="max-w-xl mx-auto space-y-6">
+
+          <div class="jt-card p-6 sm:p-8 jt-enter">
+
+            <!-- Mode affichage -->
+            <div id="profile-view-mode">
+              <div class="flex flex-col items-center text-center gap-4">
+                <div id="profile-avatar-display"></div>
+                <div>
+                  <h1 id="profile-name-display" class="font-display text-xl font-medium">—</h1>
+                  <p id="profile-email-display" class="jt-text-muted text-sm mt-1">—</p>
+                  <p id="profile-created-at" class="jt-text-muted text-xs mt-2">—</p>
+                </div>
+                <button id="profile-edit-btn" class="jt-btn jt-btn-primary text-sm mt-2">
+                  <i data-lucide="pencil" class="w-4 h-4"></i>
+                  <span>Modifier le profil</span>
+                </button>
+              </div>
+            </div>
+
+            <!-- Mode édition -->
+            <form id="profile-form" novalidate class="hidden space-y-5">
+              <h2 class="font-display text-lg font-medium text-center mb-2">Modifier mon profil</h2>
+
+              <div>
+                <label for="profile-name-input" class="jt-label">Nom complet</label>
+                <input type="text" id="profile-name-input" class="jt-input" placeholder="Ton nom" />
+              </div>
+
+              <div>
+                <label for="profile-photo-input" class="jt-label">Photo de profil (URL)</label>
+                <input type="url" id="profile-photo-input" class="jt-input" placeholder="https://exemple.com/ma-photo.jpg" />
+                <p class="text-xs jt-text-muted mt-1.5">
+                  Colle le lien direct d'une image déjà hébergée (ex : Imgur). Laisse vide pour revenir à l'avatar par défaut.
+                </p>
+              </div>
+
+              <div class="flex items-center gap-3 pt-2">
+                <button type="submit" id="profile-save-btn" class="jt-btn jt-btn-primary flex-1">
+                  <i data-lucide="check" class="w-4 h-4"></i>
+                  <span>Enregistrer</span>
+                </button>
+                <button type="button" id="profile-cancel-btn" class="jt-btn jt-btn-ghost">Annuler</button>
+              </div>
+            </form>
+
+          </div>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/profile/profile.js"></script>
+</body>
+</html>

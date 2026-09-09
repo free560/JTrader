@@ -1,0 +1,100 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Statistiques — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6">
+        <div id="statistics-content" class="max-w-5xl mx-auto space-y-8">
+          <!-- Injecté par statistics.js — skeletons pendant le chargement -->
+          <div class="grid grid-cols-2 lg:grid-cols-4 gap-4">
+            <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+            <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+            <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+            <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+          </div>
+        </div>
+
+        <!-- Graphiques (Phase 6) -->
+        <div id="statistics-charts" class="hidden max-w-5xl mx-auto space-y-8 mt-8">
+
+          <section class="space-y-3 jt-enter min-w-0">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="line-chart" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Courbe d'équité
+            </h2>
+            <div class="jt-card p-5 min-w-0">
+              <div class="relative h-[260px]">
+                <canvas id="stats-equity-chart"></canvas>
+              </div>
+            </div>
+          </section>
+
+          <section class="space-y-3 jt-enter min-w-0">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="bar-chart-2" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Graphiques
+            </h2>
+            <div class="grid lg:grid-cols-2 gap-4">
+              <div class="jt-card p-5 min-w-0">
+                <h3 class="text-sm font-medium jt-text-muted mb-3">Histogramme Profit / Perte</h3>
+                <div class="relative h-[220px]">
+                  <canvas id="stats-pnl-histogram"></canvas>
+                </div>
+              </div>
+              <div class="jt-card p-5 min-w-0">
+                <h3 class="text-sm font-medium jt-text-muted mb-3">Gains mensuels</h3>
+                <div class="relative h-[220px]">
+                  <canvas id="stats-monthly-chart"></canvas>
+                </div>
+              </div>
+              <div class="jt-card p-5 min-w-0">
+                <h3 class="text-sm font-medium jt-text-muted mb-3">Répartition WIN / LOSS</h3>
+                <div class="relative h-[220px]">
+                  <canvas id="stats-winloss-pie"></canvas>
+                </div>
+              </div>
+              <div class="jt-card p-5 min-w-0">
+                <h3 class="text-sm font-medium jt-text-muted mb-3">Performance par instrument</h3>
+                <div class="relative h-[220px]">
+                  <canvas id="stats-instrument-chart"></canvas>
+                </div>
+              </div>
+            </div>
+          </section>
+
+        </div>
+      </main>
+    </div>
+  </div>
+
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/statistics/statistics.js"></script>
+</body>
+</html>

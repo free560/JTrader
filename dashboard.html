@@ -1,0 +1,87 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Dashboard — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <!-- Sidebar (mobile: off-canvas / desktop: fixe) -->
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <!-- Contenu principal -->
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6 space-y-6">
+
+        <!-- Cartes KPI -->
+        <div id="kpi-cards" class="grid grid-cols-2 lg:grid-cols-5 gap-4">
+          <!-- Injecté par cards.js — skeletons pendant le chargement -->
+          <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+          <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+          <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+          <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+          <div class="jt-card p-5 h-[92px] animate-pulse"></div>
+        </div>
+
+        <!-- Graphique principal -->
+        <div class="jt-card p-5 jt-enter">
+          <div class="flex items-center justify-between mb-4">
+            <div>
+              <h2 class="font-display text-base font-medium">Courbe d'équité</h2>
+              <p class="text-xs jt-text-muted">Évolution du capital trade par trade</p>
+            </div>
+            <i data-lucide="line-chart" class="w-5 h-5 jt-text-muted"></i>
+          </div>
+
+          <div class="relative h-[280px]">
+            <canvas id="equity-chart" class="hidden"></canvas>
+            <div id="chart-empty-state" class="hidden absolute inset-0 flex flex-col items-center justify-center text-center">
+              <i data-lucide="area-chart" class="w-8 h-8 jt-text-muted mb-2"></i>
+              <p class="jt-text-muted text-sm">Ta courbe apparaîtra ici dès ton premier trade.</p>
+            </div>
+          </div>
+        </div>
+
+        <!-- Derniers trades -->
+        <div class="jt-card p-5 jt-enter">
+          <div class="flex items-center justify-between mb-2">
+            <h2 class="font-display text-base font-medium">Derniers trades</h2>
+            <a href="trades.html" class="text-xs jt-text-muted hover:text-white transition-colors flex items-center gap-1">
+              Voir tout <i data-lucide="arrow-right" class="w-3.5 h-3.5"></i>
+            </a>
+          </div>
+          <div id="recent-trades">
+            <div class="h-14 animate-pulse"></div>
+          </div>
+        </div>
+
+      </main>
+    </div>
+  </div>
+
+  <!-- Barre de navigation mobile (visible uniquement sous lg) -->
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/dashboard/dashboard.js"></script>
+</body>
+</html>
