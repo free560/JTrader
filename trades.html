@@ -2,6 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
+<script>
+  try {
+    if (localStorage.getItem('jt-theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch (e) {}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Historique — JTrader</title>
 
@@ -10,6 +17,9 @@
 
 <script src="https://cdn.tailwindcss.com"></script>
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/xlsx@0.18.5/dist/xlsx.full.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf@2.5.2/dist/jspdf.umd.min.js"></script>
+<script src="https://cdn.jsdelivr.net/npm/jspdf-autotable@3.8.4/dist/jspdf.plugin.autotable.min.js"></script>
 <link rel="stylesheet" href="assets/css/custom.css" />
 </head>
 <body class="jt-bg-grid min-h-screen">
@@ -50,6 +60,22 @@
             <i data-lucide="plus" class="w-4 h-4"></i>
             <span class="hidden sm:inline">Ajouter un trade</span>
           </a>
+
+          <div class="relative shrink-0">
+            <button type="button" id="export-menu-btn" class="jt-btn jt-btn-ghost whitespace-nowrap">
+              <i data-lucide="download" class="w-4 h-4"></i>
+              <span class="hidden sm:inline">Exporter</span>
+              <i data-lucide="chevron-down" class="w-3.5 h-3.5"></i>
+            </button>
+            <div id="export-menu" class="hidden absolute right-0 top-full mt-2 w-44 jt-card !bg-[var(--jt-card)] py-1.5 z-20 shadow-xl">
+              <button type="button" data-export="pdf" class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm hover:bg-white/5 transition-colors">
+                <i data-lucide="file-text" class="w-4 h-4 jt-text-muted"></i> Exporter en PDF
+              </button>
+              <button type="button" data-export="excel" class="w-full flex items-center gap-2.5 px-3.5 py-2.5 text-sm hover:bg-white/5 transition-colors">
+                <i data-lucide="file-spreadsheet" class="w-4 h-4 jt-text-muted"></i> Exporter en Excel
+              </button>
+            </div>
+          </div>
         </div>
 
         <!-- Tableau -->

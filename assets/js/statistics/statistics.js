@@ -28,7 +28,7 @@ const TONE_CLASSES = {
 };
 
 /** Définition des 3 sections de la page, dans l'ordre d'affichage. */
-function getStatSections(stats) {
+function getStatSections(stats, currency) {
   return [
     {
       title: "Vue d'ensemble",
@@ -44,12 +44,12 @@ function getStatSections(stats) {
       title: "Performance financière",
       icon: "wallet",
       items: [
-        { label: "Profit total", icon: "trending-up", value: formatSignedCurrency(stats.totalProfit), tone: stats.totalProfit >= 0 ? "success" : "danger" },
-        { label: "Perte totale", icon: "trending-down", value: `-${formatCurrency(stats.grossLoss)}`, tone: "danger" },
-        { label: "Profit moyen", icon: "arrow-up-right", value: formatCurrency(stats.avgWin), tone: "success" },
-        { label: "Perte moyenne", icon: "arrow-down-right", value: formatCurrency(stats.avgLoss), tone: "danger" },
-        { label: "Meilleur trade", icon: "trophy", value: formatSignedCurrency(stats.bestTrade), tone: "success" },
-        { label: "Pire trade", icon: "frown", value: formatSignedCurrency(stats.worstTrade), tone: "danger" }
+        { label: "Profit total", icon: "trending-up", value: formatSignedCurrency(stats.totalProfit, currency), tone: stats.totalProfit >= 0 ? "success" : "danger" },
+        { label: "Perte totale", icon: "trending-down", value: `-${formatCurrency(stats.grossLoss, currency)}`, tone: "danger" },
+        { label: "Profit moyen", icon: "arrow-up-right", value: formatCurrency(stats.avgWin, currency), tone: "success" },
+        { label: "Perte moyenne", icon: "arrow-down-right", value: formatCurrency(stats.avgLoss, currency), tone: "danger" },
+        { label: "Meilleur trade", icon: "trophy", value: formatSignedCurrency(stats.bestTrade, currency), tone: "success" },
+        { label: "Pire trade", icon: "frown", value: formatSignedCurrency(stats.worstTrade, currency), tone: "danger" }
       ]
     },
     {
@@ -63,7 +63,7 @@ function getStatSections(stats) {
           tone: stats.profitFactor >= 1.5 ? "success" : stats.profitFactor >= 1 ? "neutral" : "danger"
         },
         { label: "Risk/Reward moyen", icon: "split", value: stats.riskRewardAvg > 0 ? `1:${stats.riskRewardAvg.toFixed(2)}` : "—", tone: "neutral" },
-        { label: "Espérance / trade", icon: "sigma", value: formatSignedCurrency(stats.expectancy), tone: stats.expectancy >= 0 ? "success" : "danger" },
+        { label: "Espérance / trade", icon: "sigma", value: formatSignedCurrency(stats.expectancy, currency), tone: stats.expectancy >= 0 ? "success" : "danger" },
         { label: "Drawdown Maximum", icon: "trending-down", value: `-${formatPercent(stats.maxDrawdown)}`, tone: "danger" }
       ]
     }
@@ -111,8 +111,8 @@ function renderEmptyState(containerEl) {
   if (window.lucide) window.lucide.createIcons();
 }
 
-function renderStats(containerEl, stats) {
-  const sections = getStatSections(stats);
+function renderStats(containerEl, stats, currency) {
+  const sections = getStatSections(stats, currency);
   containerEl.innerHTML = sections.map(sectionTemplate).join("");
   if (window.lucide) window.lucide.createIcons();
 }
@@ -138,15 +138,16 @@ async function init() {
     }
 
     const startingCapital = userDoc?.settings?.startingCapital ?? DEFAULT_STARTING_CAPITAL;
+    const currency = userDoc?.settings?.currency || "USD";
     const stats = computeStats(trades, startingCapital);
-    renderStats(container, stats);
+    renderStats(container, stats, currency);
 
     chartsSection?.classList.remove("hidden");
-    renderEquityCurve(document.getElementById("stats-equity-chart"), trades, startingCapital);
-    renderPnlHistogram(document.getElementById("stats-pnl-histogram"), trades);
-    renderMonthlyPerformance(document.getElementById("stats-monthly-chart"), trades);
+    renderEquityCurve(document.getElementById("stats-equity-chart"), trades, startingCapital, currency);
+    renderPnlHistogram(document.getElementById("stats-pnl-histogram"), trades, currency);
+    renderMonthlyPerformance(document.getElementById("stats-monthly-chart"), trades, currency);
     renderWinLossPie(document.getElementById("stats-winloss-pie"), stats);
-    renderInstrumentPerformance(document.getElementById("stats-instrument-chart"), trades);
+    renderInstrumentPerformance(document.getElementById("stats-instrument-chart"), trades, currency);
   } catch (error) {
     console.error("[JTrader] Erreur de chargement des statistiques :", error);
     showToast("Impossible de charger les statistiques.", "error");

@@ -12,8 +12,9 @@
 import { requireAuth } from "../auth/authGuard.js";
 import { initLogoutButtons } from "../auth/logout.js";
 import { mountLayout } from "../utils/layout.js";
-import { getUserTrades } from "../services/firestore.js";
+import { getUserTrades, getUserDocument } from "../services/firestore.js";
 import { confirmAndDeleteTrade } from "./deleteTrade.js";
+import { exportTradesToPDF, exportTradesToExcel } from "./exportTrades.js";
 import { formatSignedCurrency, formatDate } from "../utils/formatter.js";
 import { ROUTES } from "../utils/constants.js";
 import { showToast } from "../utils/notifications.js";
@@ -22,6 +23,7 @@ const PAGE_SIZE = 10;
 
 let currentUser = null;
 let allTrades = [];
+let currency = "USD";
 
 const state = {
   search: "",
@@ -41,6 +43,8 @@ const emptyState = document.getElementById("trades-empty-state");
 const noResultsState = document.getElementById("trades-no-results");
 const paginationEl = document.getElementById("trades-pagination");
 const resultCountEl = document.getElementById("trades-result-count");
+const exportMenuBtn = document.getElementById("export-menu-btn");
+const exportMenu = document.getElementById("export-menu");
 
 const SORTABLE_COLUMNS = [
   { key: "createdAt", label: "Date" },
@@ -125,7 +129,7 @@ function renderRow(trade) {
         </span>
       </td>
       <td class="py-3 px-4 text-sm font-medium whitespace-nowrap ${isWin ? "jt-text-success" : "jt-text-danger"}">
-        ${formatSignedCurrency(trade.profit)}
+        ${formatSignedCurrency(trade.profit, currency)}
       </td>
       <td class="py-3 px-4 whitespace-nowrap">
         <span class="text-xs font-semibold px-2.5 py-1 rounded-full ${isWin ? "bg-[var(--jt-success)]/15 jt-text-success" : "bg-[var(--jt-danger)]/15 jt-text-danger"}">
@@ -265,15 +269,70 @@ function initFilters() {
   });
 }
 
+function closeExportMenu() {
+  exportMenu.classList.add("hidden");
+}
+
+function initExportMenu() {
+  exportMenuBtn.addEventListener("click", (e) => {
+    e.stopPropagation();
+    exportMenu.classList.toggle("hidden");
+  });
+
+  document.addEventListener("click", (e) => {
+    if (!exportMenu.contains(e.target) && e.target !== exportMenuBtn) {
+      closeExportMenu();
+    }
+  });
+
+  exportMenu.querySelector('[data-export="pdf"]').addEventListener("click", () => {
+    closeExportMenu();
+    const trades = getProcessedTrades();
+    if (trades.length === 0) {
+      showToast("Aucun trade à exporter avec ces filtres.", "error");
+      return;
+    }
+    try {
+      exportTradesToPDF(trades, currency);
+      showToast("Export PDF généré.", "success", 2000);
+    } catch (error) {
+      console.error("[JTrader] Erreur export PDF :", error);
+      showToast("Impossible de générer le PDF.", "error");
+    }
+  });
+
+  exportMenu.querySelector('[data-export="excel"]').addEventListener("click", () => {
+    closeExportMenu();
+    const trades = getProcessedTrades();
+    if (trades.length === 0) {
+      showToast("Aucun trade à exporter avec ces filtres.", "error");
+      return;
+    }
+    try {
+      exportTradesToExcel(trades, currency);
+      showToast("Export Excel généré.", "success", 2000);
+    } catch (error) {
+      console.error("[JTrader] Erreur export Excel :", error);
+      showToast("Impossible de générer le fichier Excel.", "error");
+    }
+  });
+}
+
 async function init() {
   currentUser = await requireAuth();
   mountLayout({ activeKey: "trades", pageTitle: "Historique des trades", user: currentUser });
   initLogoutButtons();
   initSortableHeaders();
   initFilters();
+  initExportMenu();
 
   try {
-    allTrades = await getUserTrades(currentUser.uid);
+    const [trades, userDoc] = await Promise.all([
+      getUserTrades(currentUser.uid),
+      getUserDocument(currentUser.uid)
+    ]);
+    allTrades = trades;
+    currency = userDoc?.settings?.currency || "USD";
     render();
   } catch (error) {
     console.error("[JTrader] Erreur de chargement des trades :", error);

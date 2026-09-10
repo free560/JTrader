@@ -21,6 +21,36 @@
   --jt-shadow-glow: 0 0 0 1px rgba(59, 130, 246, 0.25), 0 8px 24px -6px rgba(59, 130, 246, 0.35);
 }
 
+/* ---- Light Mode ----
+   Activé en posant data-theme="light" sur <html> (voir assets/js/utils/theme.js).
+   Les couleurs sémantiques (succès/danger/accent) restent identiques ;
+   seuls les tokens de surface/texte changent, puisque tous les composants
+   de ce fichier lisent déjà ces variables plutôt que des couleurs en dur. */
+[data-theme="light"] {
+  --jt-bg: #F1F5F9;
+  --jt-bg-soft: #E2E8F0;
+  --jt-card: #FFFFFF;
+  --jt-card-border: rgba(15, 23, 42, 0.10);
+  --jt-text: #0F172A;
+  --jt-text-muted: #64748B;
+
+  --jt-shadow-soft: 0 8px 30px -8px rgba(15, 23, 42, 0.14);
+  --jt-shadow-glow: 0 0 0 1px rgba(59, 130, 246, 0.20), 0 8px 24px -6px rgba(59, 130, 246, 0.22);
+}
+
+/* Quelques composants utilisent une teinte fixe (non une variable) car ils
+   ont besoin d'un contraste précis indépendant du fond (verre, spinner sur
+   fond sombre plein écran...) — on les corrige explicitement en Light Mode. */
+[data-theme="light"] .jt-glass { background: rgba(255, 255, 255, 0.65); }
+[data-theme="light"] .jt-input { background-color: rgba(15, 23, 42, 0.04); }
+[data-theme="light"] .jt-direction-btn { background-color: rgba(15, 23, 42, 0.03); }
+[data-theme="light"] .jt-toast { background: rgba(255, 255, 255, 0.96); }
+[data-theme="light"] #jt-bottom-nav-wrapper { background: rgba(255, 255, 255, 0.90); }
+[data-theme="light"] .jt-spinner {
+  border-color: rgba(15, 23, 42, 0.15);
+  border-top-color: #0F172A;
+}
+
 * {
   box-sizing: border-box;
 }
@@ -263,6 +293,39 @@ canvas {
   background-color: rgba(239, 68, 68, 0.12);
   border-color: var(--jt-danger);
   color: var(--jt-danger);
+}
+
+/* ---- Switch (toggle on/off) ---- */
+.jt-switch {
+  width: 44px;
+  height: 26px;
+  border-radius: 999px;
+  background-color: rgba(148, 163, 184, 0.25);
+  border: none;
+  position: relative;
+  cursor: pointer;
+  transition: background-color 0.15s ease;
+  flex-shrink: 0;
+}
+
+.jt-switch[aria-checked="true"] {
+  background-color: var(--jt-accent);
+}
+
+.jt-switch-thumb {
+  position: absolute;
+  top: 3px;
+  left: 3px;
+  width: 20px;
+  height: 20px;
+  border-radius: 50%;
+  background-color: #F8FAFC;
+  transition: transform 0.18s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.3);
+}
+
+.jt-switch[aria-checked="true"] .jt-switch-thumb {
+  transform: translateX(18px);
 }
 
 /* ---- Calendrier de trading ---- */

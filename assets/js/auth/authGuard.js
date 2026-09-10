@@ -18,6 +18,8 @@
 import { auth } from "../config/firebase.js";
 import { onAuthStateChanged } from "https://www.gstatic.com/firebasejs/10.13.0/firebase-auth.js";
 import { ROUTES } from "../utils/constants.js";
+import { getUserDocument } from "../services/firestore.js";
+import { setTheme } from "../utils/theme.js";
 
 /**
  * Affiche un voile de chargement plein écran pendant la vérification
@@ -36,14 +38,29 @@ function removeAuthCheckOverlay(overlay) {
   if (overlay && overlay.parentNode) overlay.remove();
 }
 
-/** À utiliser sur toute page qui exige un utilisateur connecté. */
+/**
+ * À utiliser sur toute page qui exige un utilisateur connecté.
+ * Applique aussi la préférence Dark/Light Mode enregistrée dans
+ * users/{uid}.settings.darkMode, de façon centralisée : chaque page
+ * protégée appelle requireAuth() en premier, donc le thème est réconcilié
+ * avec Firestore avant même l'affichage du contenu, sans avoir à dupliquer
+ * cette logique dans chacune des pages.
+ */
 export function requireAuth() {
   const overlay = showAuthCheckOverlay();
   return new Promise((resolve) => {
-    onAuthStateChanged(auth, (user) => {
+    onAuthStateChanged(auth, async (user) => {
       if (!user) {
         window.location.replace(ROUTES.LOGIN);
         return;
+      }
+      try {
+        const userDoc = await getUserDocument(user.uid);
+        setTheme(userDoc?.settings?.darkMode !== false);
+      } catch (error) {
+        // Non bloquant : on garde le thème déjà appliqué via le cache local
+        // (voir le script anti-flash dans le <head> de chaque page).
+        console.warn("[JTrader] Impossible de vérifier la préférence de thème.", error);
       }
       removeAuthCheckOverlay(overlay);
       resolve(user);

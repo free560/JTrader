@@ -29,8 +29,8 @@ const baseTooltip = {
   padding: 10
 };
 
-function currencyLabel(value) {
-  return value.toLocaleString("fr-FR", { style: "currency", currency: "USD", maximumFractionDigits: 0 });
+function currencyLabel(value, currency = "USD") {
+  return value.toLocaleString("fr-FR", { style: "currency", currency, maximumFractionDigits: 0 });
 }
 
 function toDate(value) {
@@ -39,7 +39,7 @@ function toDate(value) {
 }
 
 /** Histogramme Profit/Perte — une barre par trade, colorée selon le signe. */
-export function renderPnlHistogram(canvasEl, trades) {
+export function renderPnlHistogram(canvasEl, trades, currency = "USD") {
   const labels = trades.map((_, i) => `#${i + 1}`);
   const values = trades.map((t) => Number(t.profit) || 0);
   const colors = values.map((v) => (v >= 0 ? SUCCESS : DANGER));
@@ -54,7 +54,7 @@ export function renderPnlHistogram(canvasEl, trades) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { ...baseTooltip, callbacks: { label: (item) => ` ${currencyLabel(item.parsed.y)}` } }
+        tooltip: { ...baseTooltip, callbacks: { label: (item) => ` ${currencyLabel(item.parsed.y, currency)}` } }
       },
       scales: {
         x: { grid: { display: false }, ticks: { color: MUTED, maxTicksLimit: 8, font: { size: 10 } } },
@@ -65,7 +65,7 @@ export function renderPnlHistogram(canvasEl, trades) {
 }
 
 /** Gains mensuels — somme des profits regroupée par mois calendaire. */
-export function renderMonthlyPerformance(canvasEl, trades) {
+export function renderMonthlyPerformance(canvasEl, trades, currency = "USD") {
   const byMonth = new Map();
 
   trades.forEach((trade) => {
@@ -92,7 +92,7 @@ export function renderMonthlyPerformance(canvasEl, trades) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { ...baseTooltip, callbacks: { label: (item) => ` ${currencyLabel(item.parsed.y)}` } }
+        tooltip: { ...baseTooltip, callbacks: { label: (item) => ` ${currencyLabel(item.parsed.y, currency)}` } }
       },
       scales: {
         x: { grid: { display: false }, ticks: { color: MUTED, font: { size: 11 } } },
@@ -130,7 +130,7 @@ export function renderWinLossPie(canvasEl, stats) {
 }
 
 /** Performance par instrument — profit net cumulé, un instrument par barre. */
-export function renderInstrumentPerformance(canvasEl, trades) {
+export function renderInstrumentPerformance(canvasEl, trades, currency = "USD") {
   const byPair = new Map();
 
   trades.forEach((trade) => {
@@ -154,7 +154,7 @@ export function renderInstrumentPerformance(canvasEl, trades) {
       maintainAspectRatio: false,
       plugins: {
         legend: { display: false },
-        tooltip: { ...baseTooltip, callbacks: { label: (item) => ` ${currencyLabel(item.parsed.x)}` } }
+        tooltip: { ...baseTooltip, callbacks: { label: (item) => ` ${currencyLabel(item.parsed.x, currency)}` } }
       },
       scales: {
         x: { grid: { color: "rgba(148, 163, 184, 0.08)" }, ticks: { color: MUTED, font: { size: 10 }, callback: (v) => `$${v}` } },

@@ -1,0 +1,143 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+<meta charset="UTF-8" />
+<script>
+  try {
+    if (localStorage.getItem('jt-theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch (e) {}
+</script>
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>Paramètres — JTrader</title>
+
+<link rel="preconnect" href="https://fonts.googleapis.com" />
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet" />
+
+<script src="https://cdn.tailwindcss.com"></script>
+<script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
+<link rel="stylesheet" href="assets/css/custom.css" />
+</head>
+<body class="jt-bg-grid min-h-screen">
+
+  <div class="flex min-h-screen">
+
+    <aside id="jt-sidebar-wrapper"
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+                  transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
+      <div id="jt-sidebar" class="h-full"></div>
+    </aside>
+
+    <div class="flex-1 min-w-0 flex flex-col">
+      <div id="jt-navbar"></div>
+
+      <main class="flex-1 p-4 sm:p-6 pb-24 lg:pb-6">
+        <form id="settings-form" novalidate class="max-w-2xl mx-auto space-y-6">
+
+          <!-- Apparence -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="palette" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Apparence
+            </h2>
+
+            <div class="flex items-center justify-between">
+              <div>
+                <p class="text-sm font-medium">Dark Mode</p>
+                <p class="text-xs jt-text-muted mt-0.5">JTrader est conçu pour le mode sombre — le mode clair reste disponible mais moins raffiné.</p>
+              </div>
+              <button type="button" id="dark-mode-toggle" role="switch" class="jt-switch shrink-0 ml-4">
+                <span class="jt-switch-thumb"></span>
+              </button>
+            </div>
+          </div>
+
+          <!-- Capital -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="wallet" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Capital
+            </h2>
+
+            <div>
+              <label for="starting-capital-input" class="jt-label">Capital de départ</label>
+              <input type="number" step="any" min="0" id="starting-capital-input" class="jt-input" placeholder="10000" />
+              <p class="text-xs jt-text-muted mt-1.5">
+                Base de calcul de ton solde actuel et de ta courbe d'équité (dashboard, statistiques,
+                calendrier). Valeur par défaut si non renseignée : $10 000.
+              </p>
+            </div>
+          </div>
+
+          <!-- Préférences régionales -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="globe" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Préférences régionales
+            </h2>
+
+            <div class="grid sm:grid-cols-2 gap-4">
+              <div>
+                <label for="currency-select" class="jt-label">Devise</label>
+                <select id="currency-select" class="jt-input">
+                  <option value="USD">USD — Dollar américain</option>
+                  <option value="EUR">EUR — Euro</option>
+                  <option value="GBP">GBP — Livre sterling</option>
+                  <option value="BIF">BIF — Franc burundais</option>
+                </select>
+              </div>
+              <div>
+                <label for="timezone-select" class="jt-label">Fuseau horaire</label>
+                <select id="timezone-select" class="jt-input"></select>
+              </div>
+            </div>
+            <p class="text-xs jt-text-muted">
+              La devise s'applique aux montants affichés dans le dashboard, l'historique,
+              les statistiques et le calendrier.
+            </p>
+          </div>
+
+          <!-- Objectif mensuel -->
+          <div class="jt-card p-5 space-y-4">
+            <h2 class="font-display text-base font-medium flex items-center gap-2">
+              <i data-lucide="flag" class="w-4 h-4" style="color:var(--jt-accent)"></i>
+              Objectif mensuel
+            </h2>
+
+            <div>
+              <label for="monthly-goal-input" class="jt-label">Montant cible pour ce mois-ci</label>
+              <input type="number" step="any" min="0" id="monthly-goal-input" class="jt-input" placeholder="ex: 500" />
+            </div>
+
+            <div id="monthly-goal-progress" class="hidden space-y-2">
+              <div class="flex items-center justify-between text-sm">
+                <span class="jt-text-muted">Progression de ce mois</span>
+                <span id="monthly-goal-progress-label" class="font-medium">—</span>
+              </div>
+              <div class="h-2.5 rounded-full overflow-hidden bg-white/5">
+                <div id="monthly-goal-progress-bar" class="h-full bg-[var(--jt-accent)] transition-all" style="width:0%"></div>
+              </div>
+            </div>
+          </div>
+
+          <div class="flex items-center gap-3 pb-6">
+            <button type="submit" id="settings-save-btn" class="jt-btn jt-btn-primary">
+              <i data-lucide="check" class="w-4 h-4"></i>
+              <span>Enregistrer les paramètres</span>
+            </button>
+          </div>
+
+        </form>
+      </main>
+    </div>
+  </div>
+
+  <div id="jt-bottom-nav-wrapper" class="lg:hidden fixed bottom-0 left-0 right-0 z-40 h-16">
+    <div id="jt-bottom-nav" class="h-full"></div>
+  </div>
+
+  <script>lucide.createIcons();</script>
+  <script type="module" src="assets/js/settings/settings.js"></script>
+</body>
+</html>
