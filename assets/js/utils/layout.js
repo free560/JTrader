@@ -69,7 +69,7 @@ function renderNavbar(pageTitle, user) {
     : `<div class="w-9 h-9 rounded-full bg-[var(--jt-accent)]/20 border border-[var(--jt-accent)]/30 flex items-center justify-center font-display text-sm">${initial}</div>`;
 
   return `
-    <div class="h-16 flex items-center justify-between px-4 sm:px-6 border-b border-white/5">
+    <div class="jt-navbar-sticky sticky top-0 z-30 h-16 flex items-center justify-between px-4 sm:px-6 border-b border-white/5">
       <div class="flex items-center gap-3">
         <button id="jt-mobile-menu-btn" class="lg:hidden jt-text-muted hover:text-white">
           <i data-lucide="menu" class="w-5 h-5"></i>
@@ -114,7 +114,7 @@ function ensureBackdrop() {
   if (!backdrop) {
     backdrop = document.createElement("div");
     backdrop.id = "jt-sidebar-backdrop";
-    backdrop.className = "fixed inset-0 bg-black/60 z-30 hidden lg:hidden transition-opacity";
+    backdrop.className = "fixed inset-0 bg-black/60 z-[45] hidden lg:hidden transition-opacity";
     document.body.appendChild(backdrop);
   }
   return backdrop;

@@ -92,7 +92,6 @@ body {
   background-color: var(--jt-card);
   border: 1px solid var(--jt-card-border);
   border-radius: var(--jt-radius-lg);
-  overflow: hidden;
 }
 
 /* Filet de sécurité : un <canvas> (Chart.js) ne doit jamais dépasser
@@ -394,6 +393,15 @@ canvas {
 
 .jt-calendar-cell-win .jt-calendar-day-amount { color: var(--jt-success); }
 .jt-calendar-cell-loss .jt-calendar-day-amount { color: var(--jt-danger); }
+
+/* ---- Navbar fixe en haut d'écran (desktop + mobile) ---- */
+.jt-navbar-sticky {
+  background: rgba(15, 23, 42, 0.85);
+  backdrop-filter: blur(16px);
+  -webkit-backdrop-filter: blur(16px);
+}
+
+[data-theme="light"] .jt-navbar-sticky { background: rgba(255, 255, 255, 0.90); }
 
 /* ---- Barre de navigation mobile (bas d'écran) ---- */
 #jt-bottom-nav-wrapper {

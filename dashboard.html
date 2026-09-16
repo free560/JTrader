@@ -2,6 +2,13 @@
 <html lang="fr">
 <head>
 <meta charset="UTF-8" />
+<script>
+  try {
+    if (localStorage.getItem('jt-theme') === 'light') {
+      document.documentElement.setAttribute('data-theme', 'light');
+    }
+  } catch (e) {}
+</script>
 <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 <title>Dashboard — JTrader</title>
 
@@ -12,6 +19,14 @@
 <script src="https://unpkg.com/lucide@latest/dist/umd/lucide.js"></script>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.4/dist/chart.umd.min.js"></script>
 <link rel="stylesheet" href="assets/css/custom.css" />
+<link rel="manifest" href="manifest.json" />
+<meta name="theme-color" content="#0F172A" />
+<link rel="icon" href="assets/images/favicon.png" type="image/png" />
+<link rel="apple-touch-icon" href="assets/images/icon-192.png" />
+<meta name="apple-mobile-web-app-capable" content="yes" />
+<meta name="apple-mobile-web-app-status-bar-style" content="black-translucent" />
+<meta name="apple-mobile-web-app-title" content="JTrader" />
+<meta name="mobile-web-app-capable" content="yes" />
 </head>
 <body class="jt-bg-grid min-h-screen">
 
@@ -19,7 +34,7 @@
 
     <!-- Sidebar (mobile: off-canvas / desktop: fixe) -->
     <aside id="jt-sidebar-wrapper"
-           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-40 jt-glass lg:bg-[rgba(30,41,59,0.35)]
+           class="fixed lg:sticky top-0 left-0 h-screen w-64 z-50 jt-glass lg:bg-[rgba(30,41,59,0.35)]
                   transform -translate-x-full lg:translate-x-0 transition-transform duration-200 border-r border-white/5">
       <div id="jt-sidebar" class="h-full"></div>
     </aside>
@@ -83,5 +98,6 @@
 
   <script>lucide.createIcons();</script>
   <script type="module" src="assets/js/dashboard/dashboard.js"></script>
+  <script src="assets/js/pwa-register.js"></script>
 </body>
 </html>
